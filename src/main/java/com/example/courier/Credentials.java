@@ -18,7 +18,6 @@ public class Credentials {
         c.setPassword(courier.getPassword());
         return c;
     }
-
     public String getLogin() {
         return login;
     }

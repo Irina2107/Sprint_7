@@ -2,27 +2,40 @@ package courier;
 import com.example.courier.CourierAssertions;
 import com.example.courier.CourierClient;
 import com.example.courier.CourierGenerator;
+import com.example.courier.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
-public class CreateCourierPosTest {
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
+
+public class CreateCourierPosTest extends CourierAssertions{
     private final CourierGenerator generator = new CourierGenerator();
     private final CourierClient client = new CourierClient();
-    private final CourierAssertions check = new CourierAssertions();
     protected int courierId;
+
     @After
+    @DisplayName("Удаление курьера по id")
     public void deleteCourier() {
-        client.deleteCourier(courierId);
+        if(courierId !=0) {
+            var createResponseDel =  client.deleteCourier(courierId); //удаление курьера
+            int statusCodeDel = createResponseDel.extract().statusCode(); //получение кода ответа
+            Assert.assertEquals(SC_OK, statusCodeDel); // проверка, что код ответа 200
+        }
     }
 
     @Test
     @DisplayName("Курьера можно создать")
-    public void createCourierAndLogInSuccesfully() {
+    public void courierCreateSuccess() {
         var courier = generator.random();
-        ValidatableResponse courierResponse = client.createCourier(courier);
-        check.createdSuccessfully(courierResponse);
+        var createResponseCr = client.createCourier(courier);
+        int statusCodeCr = createResponseCr.extract().statusCode(); // получение кода ответа
+        Assert.assertEquals(SC_CREATED, statusCodeCr); //проверка, что код ответа 201
+        courierId = client.logIn(Credentials.from(courier)).extract().path("id"); // получение id
+
     }
 }
 

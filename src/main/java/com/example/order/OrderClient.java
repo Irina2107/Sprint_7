@@ -4,10 +4,10 @@ import io.restassured.response.ValidatableResponse;
 import com.example.Client;
 
 public class OrderClient extends Client {
-    static final String ORDER_API = "/orders";
+   private static final String ORDER_API = "/orders";
 
-    @Step
-    public ValidatableResponse createOrder(Order order) {
+    @Step("Создание заказа")
+        public ValidatableResponse createOrder(Order order) {
         return spec()
                 .body(order)
                 .when()
@@ -15,14 +15,14 @@ public class OrderClient extends Client {
                 .then().log().all();
     }
 
-    @Step
+    @Step("Получение списка заказов")
     public ValidatableResponse getOrderList(){
         return spec()
                 .get(ORDER_API) //GET
                 .then().log().all();
     }
 
-    @Step
+    @Step("Удаление заказа")
     public ValidatableResponse cancelOrder(int id){
         return spec()
                 .queryParam("track", id)

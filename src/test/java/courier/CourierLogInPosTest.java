@@ -1,31 +1,37 @@
 package courier;
-import com.example.courier.CourierAssertions;
-import com.example.courier.CourierClient;
-import com.example.courier.CourierGenerator;
-import com.example.courier.Credentials;
+import com.example.courier.*;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.response.ValidatableResponse;
 import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import static org.apache.http.HttpStatus.SC_OK;
 
 public class CourierLogInPosTest {
     private final CourierGenerator generator = new CourierGenerator();
-    private final CourierClient client = new CourierClient();
-    private final CourierAssertions check = new CourierAssertions();
-    protected int courierId;
+    private CourierClient client;
+    private Courier courier;
+    private Integer courierId;
 
-    @After
+  @Before
+      public void setUp() {
+      client = new CourierClient();
+      courier = generator.random();
+      client.createCourier(courier);
+    }
+  @After
+    @DisplayName("Удаление курьера по id")
     public void deleteCourier() {
-        client.deleteCourier(courierId);
-    }
+      if(courierId !=0) {
+          var createResponseDel =  client.deleteCourier(courierId); //удаление курьера
+          int statusCodeDel = createResponseDel.extract().statusCode(); //получение кода ответа
+          Assert.assertEquals(SC_OK, statusCodeDel); // проверка, что код ответа 200
+      }
+   }
     @Test
-    @DisplayName("курьер может авторизоваться, для авторизации нужно передать все обязательные поля, успешный запрос возвращает id")
-    public void courierLogInSuccesfully(){
-        var courier = generator.random();
-        client.createCourier(courier);
-        Credentials creds = Credentials.from(courier);
-        ValidatableResponse loginResponse = client.logIn(creds);
-        courierId = check.loggedInSuccessfully(loginResponse);
-        assert courierId > 100;
-    }
+    @DisplayName("Курьер может авторизоваться, для авторизации нужно передать все обязательные поля, успешный запрос возвращает id")
+    public void courierLogInSuccess(){
+        courierId = client.logIn(Credentials.from(courier)).extract().path("id"); // вход в систему и получение id
+        Assert.assertNotNull(courierId); // проверка, что id курьера не равно нулю
+     }
 }

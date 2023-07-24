@@ -43,7 +43,7 @@ public class CreateOrderTest {
     }
 
     @Parameterized.Parameters
-    public static Object[][] getTestDate() {
+    public static Object[][] getTestData() {
         Faker faker = new Faker();
         return new Object[][]{
 
