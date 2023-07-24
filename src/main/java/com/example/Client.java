@@ -1,13 +1,11 @@
 package com.example;
-
-import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 import static io.restassured.RestAssured.given;
 public class Client {
-    static final String BASE_URI = "https://qa-scooter.praktikum-services.ru";
-    static final String API_V1 = "/api/v1";
+   private static final String BASE_URI = "https://qa-scooter.praktikum-services.ru";
+    private static final String API_V1 = "/api/v1";
 
     protected RequestSpecification spec() {
         return given().log().all()
