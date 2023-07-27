@@ -1,8 +1,6 @@
 package com.example.courier;
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
-import jdk.jfr.Name;
-
 import static java.net.HttpURLConnection.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;

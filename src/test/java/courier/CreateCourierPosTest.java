@@ -4,7 +4,6 @@ import com.example.courier.CourierClient;
 import com.example.courier.CourierGenerator;
 import com.example.courier.Credentials;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.response.ValidatableResponse;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
